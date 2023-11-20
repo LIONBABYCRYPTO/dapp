@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { ABI } from './abi';
+import Connex from '@vechain/connex';
+
 
 const contractAddress = "0xa1ee5587E20cE87c4AbdfaFDE08e67750E4A3735";
 
@@ -14,47 +15,50 @@ const App = () => {
     let userLoggedIn = false;
 
     const handleLogin = async () => {
-      // ... handleLogin logic
+      try {
+        const message = {
+          purpose: "identification",
+          payload: {
+            type: "text",
+            content: "Sign this certificate to prove your identity",
+          },
+        };
+
+        const certResponse = await connex.vendor.sign("cert", message).request();
+
+        if (certResponse) {
+          userLoggedIn = true;
+          const userAddress = certResponse.annex.signer;
+          toggleLoginDisplay(userAddress);
+        } else {
+          alert("Wallet not found or cancelled");
+        }
+      } catch (error) {
+        console.error("Error during login:", error);
+        alert("An error occurred during login");
+      }
     };
 
     const toggleLoginDisplay = (userAddress) => {
-      // ... toggleLoginDisplay logic
-    };
-
-    const handleStore = async () => {
-      // ... handleStore logic
-    };
-
-    const handleRead = async () => {
-      // ... handleRead logic
+      // Update UI based on user login
     };
 
     const loginBtn = document.querySelector('#login-btn');
-    const storeBtn = document.querySelector('#store-btn');
-    const readBtn = document.querySelector('#read-btn');
-
-    if (loginBtn && storeBtn && readBtn) {
+    if (loginBtn) {
       loginBtn.addEventListener('click', handleLogin);
-      storeBtn.addEventListener('click', handleStore);
-      readBtn.addEventListener('click', handleRead);
     }
 
     return () => {
-      if (loginBtn && storeBtn && readBtn) {
+      if (loginBtn) {
         loginBtn.removeEventListener('click', handleLogin);
-        storeBtn.removeEventListener('click', handleStore);
-        readBtn.removeEventListener('click', handleRead);
       }
     };
-  }, []); // Empty dependency array ensures this effect runs only once
+  }, []);
 
   return (
-    <BrowserRouter basename="/dapp">
-      <Switch>
-        <Route exact path="/" component={Home} />
-        {/* Other routes */}
-      </Switch>
-    </BrowserRouter>
+    <div>
+      {/* Your JSX components */}
+    </div>
   );
 };
 
