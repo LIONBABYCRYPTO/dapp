@@ -16,7 +16,7 @@ const App = () => {
         walletconnect: {
           package: WalletConnectProvider,
           options: {
-            infuraId: 'YOUR_INFURA_PROJECT_ID', // Replace with your Infura Project ID
+            infuraId: 'b5db377df93e226971b25566a54cb7f4', // Replace with your Infura Project ID
           },
         },
         // Other provider options can be added here (e.g., MetaMask, Fortmatic)
