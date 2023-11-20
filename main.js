@@ -1,6 +1,21 @@
 import { ABI } from './abi';
+import React from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 const contractAddress = "0xa1ee5587E20cE87c4AbdfaFDE08e67750E4A3735";
+
+const App = () => {
+  return (
+    <BrowserRouter basename="/dapp">
+      <Switch>
+        <Route exact path="/" component={Home} />
+        {/* Other routes */}
+      </Switch>
+    </BrowserRouter>
+  );
+};
+
+export default App;
 
 const connex = new Connex({
   node: 'https://vethor-node-test.vechaindev.com',
