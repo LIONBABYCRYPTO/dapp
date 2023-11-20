@@ -1,4 +1,5 @@
 {
+  "homepage": "https://lionbabycrypto.github.io/dapp",
   "name": "dapp",
   "private": true,
   "version": "0.0.0",
@@ -6,9 +7,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "preview": "vite preview"
   },
   "devDependencies": {
+    "gh-pages": "^6.1.0",
     "vite": "^5.0.0"
   }
 }
