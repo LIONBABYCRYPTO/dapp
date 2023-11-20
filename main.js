@@ -1,58 +1,55 @@
 import React, { useEffect } from 'react';
+import Web3Modal from 'web3modal';
+import WalletConnectProvider from '@walletconnect/web3-provider';
 import { ABI } from './abi';
 import Connex from '@vechain/connex';
-
 
 const contractAddress = "0xa1ee5587E20cE87c4AbdfaFDE08e67750E4A3735";
 
 const App = () => {
   useEffect(() => {
-    const connex = new Connex({
-      node: 'https://vethor-node-test.vechaindev.com',
-      network: 'test'
+    // Create a Web3Modal instance
+    const web3Modal = new Web3Modal({
+      network: 'mainnet', // Replace with the desired network
+      cacheProvider: true,
+      providerOptions: {
+        walletconnect: {
+          package: WalletConnectProvider,
+          options: {
+            infuraId: 'YOUR_INFURA_PROJECT_ID', // Replace with your Infura Project ID
+          },
+        },
+        // Other provider options can be added here (e.g., MetaMask, Fortmatic)
+      },
     });
 
-    let userLoggedIn = false;
-
-    const handleLogin = async () => {
+    const connectWallet = async () => {
       try {
-        const message = {
-          purpose: "identification",
-          payload: {
-            type: "text",
-            content: "Sign this certificate to prove your identity",
-          },
-        };
+        const provider = await web3Modal.connect();
+        // Use the provider for interacting with the Ethereum blockchain
+        // For example: const web3 = new Web3(provider);
+        console.log('Connected to wallet:', provider);
 
-        const certResponse = await connex.vendor.sign("cert", message).request();
+        // Add your blockchain interaction logic here using the connected provider
+        // For example:
+        // const accounts = await web3.eth.getAccounts();
+        // console.log('Connected account:', accounts[0]);
 
-        if (certResponse) {
-          userLoggedIn = true;
-          const userAddress = certResponse.annex.signer;
-          toggleLoginDisplay(userAddress);
-        } else {
-          alert("Wallet not found or cancelled");
-        }
+        // Initialize Connex or other blockchain-related actions
+        const connex = new Connex({
+          node: 'https://vethor-node-test.vechaindev.com',
+          network: 'test'
+        });
+
+        // ... (continue with your existing code)
+
       } catch (error) {
-        console.error("Error during login:", error);
-        alert("An error occurred during login");
+        console.error('Error connecting to wallet:', error);
       }
     };
 
-    const toggleLoginDisplay = (userAddress) => {
-      // Update UI based on user login
-    };
+    connectWallet(); // Call connectWallet to initiate the wallet connection
 
-    const loginBtn = document.querySelector('#login-btn');
-    if (loginBtn) {
-      loginBtn.addEventListener('click', handleLogin);
-    }
-
-    return () => {
-      if (loginBtn) {
-        loginBtn.removeEventListener('click', handleLogin);
-      }
-    };
   }, []);
 
   return (
